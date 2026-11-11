@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Quiz Fala Sem Falhas</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+/* Layout: uma coluna estreita, uma pergunta por tela, resultado com oferta no fim.
+   Cor: azul-marinho e dourado da capa do livro. Tipo: Archivo (títulos) + Source Serif 4 (texto). */
+:root{color-scheme:light;
+  --bg:#F4F6F9; --surface:#FFFFFF; --ink:#14233B; --muted:#55627A; --line:#D5DBE6;
+  --accent:#F2B84B; --on-accent:#14233B; --accent-text:#8A6208; --soft:#FFF3D6;
+  --display:"Archivo","Helvetica Neue",Arial,sans-serif; --text:"Source Serif 4",Georgia,serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0E1828; --surface:#16253B; --ink:#F2EEE3; --muted:#A8B3C6; --line:#2A3B57;
+  --accent:#F2B84B; --on-accent:#14233B; --accent-text:#F2B84B; --soft:#241F12; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0E1828; --surface:#16253B; --ink:#F2EEE3; --muted:#A8B3C6; --line:#2A3B57;
+  --accent:#F2B84B; --on-accent:#14233B; --accent-text:#F2B84B; --soft:#241F12; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--text);font-size:18px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 48px}
+.wrap{max-width:600px;margin:0 auto}
+.brand{font:700 12px/1 var(--display);letter-spacing:.12em;text-transform:uppercase;color:var(--accent-text);margin-bottom:22px}
+h1,h2,h3{font-family:var(--display);font-weight:800;line-height:1.1;margin:0;text-wrap:balance;letter-spacing:-.01em}
+h1{font-size:clamp(34px,8vw,46px)} h2{font-size:clamp(24px,6vw,30px)} h3{font-size:19px}
+p{margin:0}
+.lead{margin-top:16px;color:var(--muted)}
+.btn{display:block;width:100%;box-sizing:border-box;text-align:center;text-decoration:none;cursor:pointer;border:0;
+  background:var(--accent);color:var(--on-accent);font:800 17px/1.2 var(--display);padding:17px 20px;border-radius:10px}
+.btn:hover{filter:brightness(1.05)} .btn.ghost{background:transparent;color:var(--ink);border:2px solid var(--line)}
+:focus-visible{outline:3px solid var(--accent-text);outline-offset:2px}
+.mt{margin-top:24px} .mt2{margin-top:12px}
+.meta{margin-top:14px;font:500 13px/1.4 var(--display);color:var(--muted)}
+.bar{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin-bottom:8px}
+.bar i{display:block;height:100%;background:var(--accent);transition:width .25s}
+.count{font:700 12px/1 var(--display);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:22px}
+.opts{display:grid;gap:10px;margin-top:22px}
+.opt{text-align:left;cursor:pointer;background:var(--surface);color:var(--ink);border:2px solid var(--line);border-radius:10px;
+  font:400 17px/1.4 var(--text);padding:15px 16px}
+.opt:hover{border-color:var(--accent-text)}
+.back{margin-top:18px;background:none;border:0;color:var(--muted);font:600 14px var(--display);cursor:pointer;padding:6px 0}
+.tag{display:inline-block;background:var(--accent);color:var(--on-accent);font:800 12px/1 var(--display);letter-spacing:.08em;text-transform:uppercase;padding:7px 10px;border-radius:6px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;margin-top:22px}
+.days{margin:12px 0 0;padding:0;list-style:none;display:grid;gap:8px}
+.days li{padding-left:0}
+.days b{font-family:var(--display);color:var(--accent-text)}
+.offer{background:var(--soft);border:2px solid var(--accent);border-radius:12px;padding:22px;margin-top:26px}
+.price{font:800 40px/1 var(--display);margin-top:14px}
+.price small{font:500 15px var(--display);color:var(--muted)}
+.inc{margin:16px 0 0;padding:0;list-style:none;display:grid;gap:8px;font-size:16px}
+.inc li::before{content:"✓ ";color:var(--accent-text);font-weight:700}
+.fine{font-size:14px;color:var(--muted);margin-top:16px}
+.who{display:flex;gap:14px;align-items:center;margin-top:26px;font-size:16px}
+.who b{font-family:var(--display)}
+</style>
+<style>html{padding:0}body{margin:0}[hidden]{display:none!important}</style>
+</head>
+<body>
+
+
+<div class="wrap">
+  <div class="brand">Fala Sem Falhas</div>
+
+  <section id="start">
+    <h1>Qual é o seu tipo de travamento ao falar?</h1>
+    <p class="lead" style="font-weight:600;color:var(--ink)">Você sabia que o seu cliente pode estar do outro lado da rua? Se alguém soubesse o que você vende por um vídeo, compraria de você?</p>
+    <p class="lead" style="margin-top:12px">Responda 8 perguntas rápidas. No final, você descobre o que mais te segura na hora de gravar um vídeo e qual é o primeiro passo para destravar.</p>
+    <button class="btn mt" id="go">Começar o quiz</button>
+    <p class="meta">Leva cerca de 1 minuto. Não precisa se cadastrar.</p>
+  </section>
+
+  <section id="quiz" hidden>
+    <div class="bar"><i id="fill"></i></div>
+    <div class="count" id="count"></div>
+    <h2 id="q"></h2>
+    <div class="opts" id="opts"></div>
+    <button class="back" id="back">← Voltar</button>
+  </section>
+
+  <section id="result" hidden>
+    <span class="tag">Seu resultado</span>
+    <h1 id="rtitle" class="mt2"></h1>
+    <p class="lead" id="rtext"></p>
+    <p class="lead" id="rsell" style="margin-top:12px"></p>
+    <div class="card">
+      <h3>Onde o Desafio trabalha isso</h3>
+      <ul class="days" id="rdays"></ul>
+    </div>
+    <div class="who">
+      <div><b>Mário Sérgio</b><br>Mentor de oratória e comunicação na prática, o Serginho da TV. Mais de 30 anos falando para o público.</div>
+    </div>
+    <div class="offer">
+      <h2>Desafio Fala Sem Falhas</h2>
+      <p class="lead" style="margin-top:8px">7 dias para gravar e postar o seu primeiro vídeo. Uma tarefa por dia, de 20 a 30 minutos.</p>
+      <ul class="inc">
+        <li>E-book em PDF que você preenche direto no celular</li>
+        <li>Roteiro de três passos, com ajuda de inteligência artificial</li>
+        <li>Como gravar com o teleprompter do aplicativo Edits</li>
+        <li>Bio do Instagram e link do WhatsApp no perfil</li>
+        <li>Material para fazer sozinho, no seu ritmo</li>
+      </ul>
+      <div class="price"><span id="price"></span> <small>preço de lançamento</small></div>
+      <a class="btn mt" id="buy" href="#" target="_blank" rel="noopener">Quero o meu desafio</a>
+      <p class="fine">Este material é educativo. Ele não promete vendas, seguidores nem dinheiro. A promessa é uma só: você grava e posta o seu primeiro vídeo em 7 dias.</p>
+    </div>
+    <button class="btn ghost mt" id="again">Refazer o quiz</button>
+  </section>
+</div>
+
+<script>
+// Configuração. Quando tiver o link de pagamento da Hotmart, cole em CHECKOUT_URL.
+var CHECKOUT_URL = "";
+var PRICE = "R$ 37,00";
+var WHATSAPP = "5569992421462";
+
+var QUESTIONS = [
+  {q:"Imagine que você vai gravar um vídeo de 1 minuto agora. O que passa pela sua cabeça?", o:[
+    ["a","E se eu esquecer o que ia dizer?"],["b","Quem vai ver isso? E se rirem de mim?"],
+    ["c","Vou falar rápido demais ou encher de “né” e “tipo assim”."],["d","Tenho muita coisa a dizer e não sei o que colocar."],
+    ["e","Nem tenho o meu perfil pronto para isso."]]},
+  {q:"Você tem vontade de vender na internet, ou no digital?", o:[
+    ["s1","Sim, é o meu principal objetivo."],["s2","Sim, mas não sei como começar."],
+    ["s3","Já vendo e quero vender mais."],["s4","Ainda não. Quero só perder o medo de falar."]]},
+  {q:"Quando você explica o seu trabalho ou uma ideia, como costuma ser?", o:[
+    ["a","Eu sei o assunto, mas na hora me dá branco."],["b","Eu falo, mas fico pensando no que acharam."],
+    ["c","Falo depressa e puxo “então”, “né”, “tipo assim”."],["d","Dou muita volta e demoro a chegar ao ponto."],
+    ["e","Poucas pessoas sabem direito o que eu faço."]]},
+  {q:"Você já começou a gravar um vídeo e desistiu. O que aconteceu?", o:[
+    ["a","Travei no meio e perdi o fio."],["b","Senti vergonha e apaguei antes de alguém ver."],
+    ["c","Não gostei da minha voz nem de como apareci."],["d","Não soube como começar nem como terminar."],
+    ["e","Nunca cheguei a tentar. Achei que não era para mim."]]},
+  {q:"Você errou uma palavra no meio da fala. O que acontece?", o:[
+    ["a","Perco o rumo e demoro a voltar."],["b","Fico remoendo o erro o resto da conversa."],
+    ["c","Acelero ou rio nervoso, sem jeito."],["d","Tento consertar e me enrolo ainda mais."]]},
+  {q:"Qual destas frases mais parece com você?", o:[
+    ["a","“Preciso decorar tudo para falar bem.”"],["b","“Prefiro não aparecer a ser criticado(a).”"],
+    ["c","“Eu não suporto me ouvir gravado(a).”"],["d","“Eu nunca sei como começar uma fala.”"],
+    ["e","“O meu trabalho é bom, mas pouca gente conhece.”"]]},
+  {q:"O que mais te impede de postar hoje?", o:[
+    ["a","Medo de errar na hora de gravar."],["b","Medo de críticas e comentários."],
+    ["c","Acho que não tenho o jeito certo para vídeo."],["d","Não sei o que postar."],
+    ["e","Não sei por onde começar nas redes."]]},
+  {q:"Qual seria uma vitória para você em 7 dias?", o:[
+    ["a","Gravar um vídeo sem travar."],["b","Perder a vergonha de aparecer."],
+    ["c","Gostar mais da minha voz e da minha imagem."],["d","Saber exatamente o que dizer."],
+    ["e","Postar e ser encontrado por quem precisa do meu trabalho."]]}
+];
+var PROFILES = {
+  a:{t:"Medo do branco", x:"O seu maior travamento é o medo de esquecer o que ia dizer. Decorar é teatro, e teatro cansa. Quem sabe a ideia central e tem um roteiro simples fala solto, e quem erra aprende a voltar em 30 segundos.",
+     d:[["Dia 3","O roteiro de três passos: objetivo, três ideias e um pedido."],["Dia 6","Errar e voltar: o que fazer logo depois do tropeço."]]},
+  b:{t:"Medo de ser julgado", x:"O que mais te segura é o olhar dos outros. Esse medo ganha força quando fica como uma nuvem. Quando ganha nome, vira tarefa, e você passa a agir com o medo do lado, sem esperar que ele acabe.",
+     d:[["Dia 1","Dê nome ao medo: transformar a nuvem em uma tarefa."],["Dia 7","Poste sem medo: publicar e mostrar para as primeiras pessoas."]]},
+  c:{t:"Voz e vícios em alerta", x:"Você sabe o que dizer, mas a voz, a pressa e os vícios como “né” e “tipo assim” atrapalham. Esses vícios nascem da insegurança e do medo do silêncio. Pausa é melhor que “né”, e treinar começa por se ouvir como quem ouve um estranho.",
+     d:[["Dia 4","Rodada 1: a voz, as pausas e os vícios de linguagem."],["Dia 5","Rodada 2: a imagem, o olhar e a postura."]]},
+  d:{t:"Se perde no caminho", x:"Você não tem medo de falar. Tem muito a dizer e falta organizar. Quem fala dez coisas, a plateia guarda nenhuma. Com a conclusão primeiro e só três ideias, a sua fala fica clara.",
+     d:[["Dia 3","O roteiro de três passos, com ajuda de inteligência artificial."],["Dia 6","O vídeo completo: assistir como cliente e escolher a melhor gravação."]]},
+  e:{t:"Bom no que faz, pouco visto", x:"Tem muita gente que faz um trabalho melhor do que as grandes marcas, mas não mostra e não conta para ninguém. O seu próximo cliente pode estar na sua rua e nem saber que você existe. Falta preparar a sua emissora e aparecer.",
+     d:[["Dia 2","Prepare a sua emissora: perfil, bio e link do WhatsApp."],["Dia 7","Poste sem medo: o primeiro vídeo e as 10 pessoas que vão ver."]]}
+};
+var i=0, ans=[];
+function $(id){return document.getElementById(id)}
+function show(id){["start","quiz","result"].forEach(function(s){$(s).hidden=(s!==id)}); window.scrollTo(0,0)}
+function render(){
+  var Q=QUESTIONS[i];
+  $("count").textContent="Pergunta "+(i+1)+" de "+QUESTIONS.length;
+  $("fill").style.width=((i)/QUESTIONS.length*100)+"%";
+  $("q").textContent=Q.q;
+  var box=$("opts"); box.innerHTML="";
+  Q.o.forEach(function(op){
+    var b=document.createElement("button"); b.className="opt"; b.type="button"; b.textContent=op[1];
+    b.onclick=function(){ans[i]=op[0]; if(i<QUESTIONS.length-1){i++;render()}else{finish()}};
+    box.appendChild(b);
+  });
+  $("back").style.visibility=i===0?"hidden":"visible";
+}
+function finish(){
+  var n={a:0,b:0,c:0,d:0,e:0}, sell="";
+  var scored=ans.filter(function(k){if(k in n){return true} sell=k; return false});
+  scored.forEach(function(k){n[k]++});
+  var best=scored[0]; Object.keys(n).forEach(function(k){if(n[k]>n[best])best=k});
+  var P=PROFILES[best];
+  $("rtitle").textContent=P.t; $("rtext").textContent=P.x;
+  $("rdays").innerHTML=P.d.map(function(d){return "<li><b>"+d[0]+".</b> "+d[1]+"</li>"}).join("");
+  var SELL={s1:"Você quer vender na internet. O primeiro passo é ser visto e lembrado. O Desafio te leva do perfil arrumado ao primeiro vídeo postado. Ele não promete vendas, mas prepara a base para elas.",
+    s2:"Você quer vender, mas não sabe por onde começar. O Desafio é justamente esse caminho: perfil, link do WhatsApp, roteiro e o primeiro vídeo, um dia de cada vez.",
+    s3:"Você já vende e quer vender mais. Falar com clareza e aparecer com constância ajuda as pessoas a escolherem você. O Desafio dá o método para gravar com segurança.",
+    s4:"Mesmo sem pensar em vender agora, falar sem travar abre portas no trabalho, nas relações e nas redes. O Desafio foi feito para você começar sem pressão."};
+  $("rsell").textContent=SELL[sell]||"";
+  $("price").textContent=PRICE;
+  var buy=$("buy");
+  if(CHECKOUT_URL){buy.href=CHECKOUT_URL}
+  else{buy.href="https://wa.me/"+WHATSAPP+"?text="+encodeURIComponent("Oi, Mário! Fiz o quiz (resultado: "+P.t+") e quero o Desafio Fala Sem Falhas.")}
+  show("result");
+}
+$("go").onclick=function(){i=0;ans=[];show("quiz");render()};
+$("back").onclick=function(){if(i>0){i--;render()}};
+$("again").onclick=function(){i=0;ans=[];show("start")};
+</script>
+
+</body>
+</html>
